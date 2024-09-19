@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 
-function ToDoForm({ onAdd }) {
-  const [title, setTitle] = useState('')
+function ToDoForm({ onAdd, buttonText = 'Add', placeholder = 'Enter task', initialValue = '' }) {
+  const [title, setTitle] = useState(initialValue)
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (title.trim()) {
       onAdd(title)
-      setTitle('')
+      setTitle('') // Очищення поля після додавання
     }
   }
 
@@ -21,11 +21,11 @@ function ToDoForm({ onAdd }) {
         type="text"
         value={title}
         onChange={handleInputChange}
-        placeholder="Add a new task"
+        placeholder={placeholder} // Плейсхолдер передається через пропси
         className="input-field"
       />
       <button type="submit" className="add-btn">
-        Add
+        {buttonText} {/* Текст кнопки також передається через пропси */}
       </button>
     </form>
   )
