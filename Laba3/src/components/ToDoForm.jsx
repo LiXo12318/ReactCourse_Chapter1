@@ -25,7 +25,7 @@ function ToDoForm({ onAdd, buttonText = 'Add', placeholder = 'Enter task', initi
         className="input-field"
       />
       <button type="submit" className="add-btn">
-        {buttonText} {/* Текст кнопки також передається через пропси */}
+        {buttonText} 
       </button>
     </form>
   )
