@@ -1,48 +1,64 @@
-import { useState, useEffect } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import React, { useState, useEffect } from 'react';
+import ToDoForm from './components/ToDoForm';
+import ToDoList from './components/ToDoList';
+import SearchBar from './components/SearchBar';
+import useGetAllToDo from './hooks/useGetAllToDo';
 import './App.css';
 import Loading from './components/Loading';
 
 function App() {
-  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { isLoading, data: fetchedToDo, error } = useGetAllToDo();
+  const [localToDo, setLocalToDo] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
+  useEffect(() => {
+    if (fetchedToDo) {
+      setLocalToDo(fetchedToDo);
+    }
+  }, [fetchedToDo]);
   useEffect(() => {
     // Імітація завантаження
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
     return <Loading />;
   }
+  const handleAddToDo = (title) => {
+    const newToDo = {
+      id: Date.now(),
+      title,
+    };
+    setLocalToDo([...localToDo, newToDo]);
+  };
+
+  const handleDeleteToDo = (id) => {
+    setLocalToDo(localToDo.filter((item) => item.id !== id));
+  };
+
+  const filteredToDo = localToDo.filter((item) =>
+    item.title.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app-container">
+    <h1>To-Do List</h1>
+    <ToDoForm onAdd={handleAddToDo} />
+    <SearchBar searchValue={searchValue} onSearchChange={setSearchValue} />
+    <ToDoList toDo={filteredToDo} onDelete={handleDeleteToDo} />
+  </div>
   );
 }
 
