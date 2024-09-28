@@ -7,15 +7,34 @@ import './App.css';
 import Loading from './components/Loading';
 
 function App() {
-  const { isLoading, data: fetchedToDo, error } = useGetAllToDo();
+  const { isLoading: isFetching, data: fetchedToDo, error } = useGetAllToDo();
+  const [loading, setLoading] = useState(true);
   const [localToDo, setLocalToDo] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
+    // Імітація завантаження для 3 секунд
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(timer); // Очищення таймера при демонтажі
+  }, []);
+
+  useEffect(() => {
     if (fetchedToDo) {
-      setLocalToDo(fetchedToDo);
+      setLocalToDo(fetchedToDo.slice(0, 10)); // Наприклад, обмежимо до 10 елементів
     }
   }, [fetchedToDo]);
+
+  // Відображення лоадера під час імітації завантаження
+  if (loading || isFetching) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   const handleAddToDo = (title) => {
     const newToDo = { id: Date.now(), title };
@@ -37,9 +56,6 @@ function App() {
   const filteredToDo = localToDo.filter((item) =>
     item.title.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className="app-container">
