@@ -109,6 +109,15 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
 }
+.input-error {
+  border: 2px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
 
 .delete-btn:hover {
   background-color: #f3b6b5;
