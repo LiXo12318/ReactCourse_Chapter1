@@ -4,10 +4,9 @@ import ToDoList from './components/ToDoList';
 import SearchBar from './components/SearchBar';
 import useGetAllToDo from './hooks/useGetAllToDo';
 import './App.css';
-import Loading from './components/Loading';
+import Loader from './components/Loader';
 
 function App() {
-  const [loading, setLoading] = useState(true);
   const { isLoading, data: fetchedToDo, error } = useGetAllToDo();
   const [localToDo, setLocalToDo] = useState([]);
   const [searchValue, setSearchValue] = useState('');
@@ -17,17 +16,11 @@ function App() {
       setLocalToDo(fetchedToDo);
     }
   }, [fetchedToDo]);
-  useEffect(() => {
-    // Імітація завантаження
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
 
-  if (loading) {
-    return <Loading />;
+  if (error) {
+    return <p>Error: {error.message}</p>;
   }
+
   const handleAddToDo = (title) => {
     const newToDo = {
       id: Date.now(),
@@ -44,21 +37,15 @@ function App() {
     item.title.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-
   return (
-    <div className="app-container">
-    <h1>To-Do List</h1>
-    <ToDoForm onAdd={handleAddToDo} />
-    <SearchBar searchValue={searchValue} onSearchChange={setSearchValue} />
-    <ToDoList toDo={filteredToDo} onDelete={handleDeleteToDo} />
-  </div>
+    <Loader isLoading={isLoading}>
+      <div className="app-container">
+        <h1>To-Do List</h1>
+        <ToDoForm onAdd={handleAddToDo} />
+        <SearchBar searchValue={searchValue} onSearchChange={setSearchValue} />
+        <ToDoList toDo={filteredToDo} onDelete={handleDeleteToDo} />
+      </div>
+    </Loader>
   );
 }
 

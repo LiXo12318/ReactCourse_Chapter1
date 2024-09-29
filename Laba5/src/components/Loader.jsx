@@ -1,12 +1,16 @@
 import React from 'react';
 
-const Loading = () => {
-  return (
-    <div style={styles.container}>
-      <div style={styles.spinner}></div>
-      <p>Завантаження...</p>
-    </div>
-  );
+const Loader = ({ isLoading, children }) => {
+  if (isLoading) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+        <p>Завантаження...</p>
+      </div>
+    );
+  }
+
+  return children;
 };
 
 const styles = {
@@ -24,7 +28,7 @@ const styles = {
     borderTop: '6px solid #3498db',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
-  }
+  },
 };
 
-export default Loading;
+export default Loader;
