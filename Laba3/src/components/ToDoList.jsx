@@ -1,18 +1,15 @@
-import React from 'react'
+import React from 'react';
+import ToDoItem from './ToDoItem';
+import './ToDoList.css';
 
-function ToDoList({ toDo, onDelete }) {
+function ToDoList({ toDoItems, onDelete }) {
   return (
     <ul className="todo-list">
-      {toDo.map((item) => (
-        <li key={item.id} className="todo-item">
-          <span>{item.title}</span>
-          <button onClick={() => onDelete(item.id)} className="delete-btn">
-            Delete
-          </button>
-        </li>
+      {toDoItems.map((item) => (
+        <ToDoItem key={item.id} item={item} onDelete={onDelete} />
       ))}
     </ul>
-  )
+  );
 }
 
-export default ToDoList
+export default ToDoList;

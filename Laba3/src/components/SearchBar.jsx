@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './SearchBar.css';
 
 function SearchBar({ searchValue, onSearchChange }) {
   return (
@@ -9,7 +10,7 @@ function SearchBar({ searchValue, onSearchChange }) {
       placeholder="Search tasks"
       className="input-field search-field"
     />
-  )
+  );
 }
 
-export default SearchBar
+export default SearchBar;
