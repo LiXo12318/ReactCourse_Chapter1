@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const useGetAllToDo = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -10,17 +10,20 @@ const useGetAllToDo = () => {
       setIsLoading(true);
       try {
         const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-        const json = await response.json();
-        setData(json);
-        setIsLoading(false);
-      } catch (error) {
-        setError(error);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []); // виконується лише при першому завантаженні
+  }, []);
 
   return { isLoading, data, error };
 };

@@ -1,34 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-function ToDoForm({ onAdd, buttonText = 'Add', placeholder = 'Enter task', initialValue = '' }) {
-  const [title, setTitle] = useState(initialValue)
+function ToDoForm({ onAdd }) {
+  const [title, setTitle] = useState('');
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (title.trim()) {
-      onAdd(title)
-      setTitle('') // Очищення поля після додавання
+      onAdd(title);
+      setTitle('');
     }
-  }
-
-  const handleInputChange = (e) => {
-    setTitle(e.target.value)
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="todo-form">
       <input
         type="text"
         value={title}
-        onChange={handleInputChange}
-        placeholder={placeholder} 
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Add a new task"
         className="input-field"
       />
-      <button type="submit" className="add-btn">
-        {buttonText} 
-      </button>
+      <button type="submit" className="add-btn">Add</button>
     </form>
-  )
+  );
 }
 
-export default ToDoForm
+export default ToDoForm;

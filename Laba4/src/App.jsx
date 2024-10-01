@@ -1,51 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import ToDoForm from './components/ToDoForm';
-import ToDoList from './components/ToDoList';
-import SearchBar from './components/SearchBar';
-import useGetAllToDo from './hooks/useGetAllToDo';
 import './App.css';
+import ToDoForm from './components/ToDoForm';
+import SearchBar from './components/SearchBar';
+import ToDoList from './components/ToDoList';
+import useGetAllToDo from './hooks/useGetAllToDo';
 
 function App() {
-  const { isLoading, data: fetchedToDo, error } = useGetAllToDo();
-  const [localToDo, setLocalToDo] = useState([]);
+  const { isLoading, data: fetchedToDos, error } = useGetAllToDo();
   const [searchValue, setSearchValue] = useState('');
+  const [toDo, setToDo] = useState([]);
 
+  // Update local state when fetchedToDos changes
   useEffect(() => {
-    if (fetchedToDo) {
-      setLocalToDo(fetchedToDo);
+    if (fetchedToDos) {
+      setToDo(fetchedToDos);
     }
-  }, [fetchedToDo]);
+  }, [fetchedToDos]);
 
-  const handleAddToDo = (title) => {
-    const newToDo = {
-      id: Date.now(),
-      title,
-    };
-    setLocalToDo([...localToDo, newToDo]);
+  const handleAdd = (title) => {
+    const newToDo = { id: Date.now(), title };
+    setToDo([...toDo, newToDo]);
   };
 
-  const handleDeleteToDo = (id) => {
-    setLocalToDo(localToDo.filter((item) => item.id !== id));
+  const handleDelete = (id) => {
+    setToDo(toDo.filter(item => item.id !== id));
   };
 
-  const filteredToDo = localToDo.filter((item) =>
+  const filteredToDo = toDo.filter(item =>
     item.title.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
 
   return (
     <div className="app-container">
       <h1>To-Do List</h1>
-      <ToDoForm onAdd={handleAddToDo} />
-      <SearchBar searchValue={searchValue} onSearchChange={setSearchValue} />
-      <ToDoList toDo={filteredToDo} onDelete={handleDeleteToDo} />
+      <ToDoForm onAdd={handleAdd} />
+      <SearchBar 
+        searchValue={searchValue} 
+        onSearchChange={setSearchValue} 
+      />
+      {isLoading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <ToDoList toDoItems={filteredToDo} onDelete={handleDelete} />
     </div>
   );
 }
