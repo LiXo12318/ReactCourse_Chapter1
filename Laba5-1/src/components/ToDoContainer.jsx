@@ -4,6 +4,7 @@ import SearchBar from './SearchBar';
 import ToDoList from './ToDoList';
 import useGetAllToDo from '../hooks/useGetAllToDo';
 import Loader from './Loader';
+import ErrorDisplay from './ErrorDisplay';
 
 function ToDoContainer() {
   const { isLoading, data: toDos, setData, error } = useGetAllToDo();
@@ -23,20 +24,17 @@ function ToDoContainer() {
   );
 
   return (
-    <div className="todo-container">
-      <ToDoForm onAdd={handleAddToDo} />
-      <SearchBar
-        searchValue={searchValue}
-        onSearchChange={(e) => setSearchValue(e.target.value)}
-      />
-      <Loader isLoading={isLoading}>
-        {error ? (
-          <div>Error: {error.message}</div>
-        ) : (
-          <ToDoList toDoItems={filteredToDo} onDelete={handleDelete} />
-        )}
-      </Loader>
-    </div>
+    <Loader isLoading={isLoading}>
+      {error && <ErrorDisplay error={error} />}
+      <div className="todo-container">
+        <ToDoForm onAdd={handleAddToDo} />
+        <SearchBar
+          searchValue={searchValue}
+          onSearchChange={(e) => setSearchValue(e.target.value)}
+        />
+        <ToDoList toDoItems={filteredToDo} onDelete={handleDelete} />
+      </div>
+    </Loader>
   );
 }
 

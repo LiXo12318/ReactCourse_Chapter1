@@ -2,15 +2,16 @@ import React from 'react';
 
 const Loader = ({ isLoading, children }) => {
   return (
-    <div className="loader-container">
+    <>
       {isLoading && (
-        <>
-          <div className="loader"></div>
-          <div className="loading-text">Loading...</div>
-        </>
+        <div className="loader-container">
+          <div className="loader-overlay">
+            <div className="loader"></div>
+          </div>
+        </div>
       )}
-      {!isLoading && children}
-    </div>
+      {children}
+    </>
   );
 };
 
